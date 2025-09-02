@@ -1,0 +1,179 @@
+#include <iostream>
+#include <string>
+#include <iomanip>  // i did this for organized colums
+using namespace std;
+
+const int NUM_PRODUCTS = 5;
+const int COL1_WIDTH = 5;
+const int COL2_WIDTH = 20;
+const int COL3_WIDTH = 15;
+const int COL4_WIDTH = 10;
+
+void displayMenu(string products[], string descriptions[], double prices[], int inventory[]) {
+    cout << "\n=== COMPUTER STORE MENU ===\n";
+    cout << left 
+         << setw(COL1_WIDTH) << "ID" 
+         << setw(COL2_WIDTH) << "Model" 
+         << setw(COL3_WIDTH) << "Price" 
+         << setw(COL4_WIDTH) << "In Stock" 
+         << "Description\n";
+    cout << string(70, '-') << "\n";
+
+    
+    
+    for (int i = 0; i < NUM_PRODUCTS; i++) {
+        cout << left 
+             << setw(COL1_WIDTH) << i+1 
+             << setw(COL2_WIDTH) << products[i] 
+           << "$" << setw(COL3_WIDTH-1) << fixed <<  
+            
+            
+            
+            setprecision(2) << prices[i]
+             << setw(COL4_WIDTH) << inventory[i]
+             << descriptions[i] << "\n";
+    }
+}
+
+
+
+void displayStatus(string products[], int sales[], int inventory[], int demand[]) {
+    cout << "\n=== STORE STATUS ===\n";
+    cout << left
+         << setw(COL2_WIDTH) << "Model"
+         << setw(COL4_WIDTH) << "Sales"
+         << setw(COL4_WIDTH) << "Inventory"
+         << "Demand\n";
+    
+    
+    
+    cout << string(50, '-') << "\n";
+
+    
+    
+    for (int i = 0; i < NUM_PRODUCTS; i++) {
+        cout << left
+             << setw(COL2_WIDTH) << products[i]
+             << setw(COL4_WIDTH) << sales[i]
+             << setw(COL4_WIDTH) << inventory[i]
+             << demand[i] << "\n";
+    }
+}
+
+int main() {
+    //  parallel arrays
+    string products[NUM_PRODUCTS] = {
+        "MacBook Pro", "Dell XPS", "HP Spectre", "Lenovo ThinkPad", "ASUS ROG"
+    };
+    string descriptions[NUM_PRODUCTS] = {
+        "M3 Pro, 36GB", "i9, 32GB", "i7, 16GB", "i7, 16GB", "Ryzen 9, 32GB"
+    };
+   
+    
+    double prices[NUM_PRODUCTS] = {2499.99, 1999.99, 1499.99, 1299.99, 1799.99};
+    int inventory[NUM_PRODUCTS] = {15, 20, 18, 25, 12};
+    int sales[NUM_PRODUCTS] = {0};
+    int demand[NUM_PRODUCTS] = {0};
+
+    cout << "==================================\n";
+    cout << "   Welcome to Godson's Store!\n";
+    cout << "==================================\n";
+
+    
+    
+    while (true) {
+        displayStatus(products, sales, inventory, demand);
+
+       
+        
+        // To Check if all sold out
+        bool allSold = true;
+        for (int i = 0; i < NUM_PRODUCTS; i++) {
+            if (inventory[i] > 0) {
+                allSold = false;
+                break;
+            }
+        }
+       
+        
+        if (allSold) {
+            cout << "\nAll products sold out!\n";
+            break;
+        }
+
+        // to Process  the purchase
+       
+        
+        displayMenu(products, descriptions, prices, inventory);
+
+        int choice;
+        cout << "\nEnter product ID to purchase (1-" << NUM_PRODUCTS << " or 0 to exit): ";
+        cin >> choice;
+
+       
+        
+        if (choice == 0) break;
+        if (choice < 1 || choice > NUM_PRODUCTS) {
+            cout << "Invalid choice. Please try again.\n";
+            continue;
+        }
+
+       
+        
+        int index = choice - 1;
+        cout << "\nSelected: " << products[index] << "\n";
+        cout << "Description: " << descriptions[index] << "\n";
+        cout << "Price: $" << fixed << setprecision(2) << prices[index] << "\n";
+        cout << "In stock: " << inventory[index] << "\n";
+
+       
+        int quantity;
+        cout << "Enter quantity: ";
+        cin >> quantity;
+
+        if (quantity <= 0) {
+            cout << "Quantity must be positive.\n";
+            continue;
+        }
+      
+        if (quantity > inventory[index]) {
+            cout << "Only " << inventory[index] << " available. Demand recorded.\n";
+            demand[index] += quantity;
+            continue;
+        }
+
+        // to Complete purchase
+        
+        
+        inventory[index] -= quantity;
+        sales[index] += quantity;
+        double total = prices[index] * quantity;
+
+        // to Print receipt
+        cout << "\n=== GODSON'S STORE RECEIPT ===\n";
+        cout << "ITEM: " << products[index] << "\n";
+        cout << "QTY: " << quantity << " @ $" << prices[index] << "\n";
+        
+        
+        cout << "TOTAL: $" << total << "\n";
+        cout << "Thank you for shopping with us!\n\n";
+    }
+
+    // Final sales report
+    cout << "\n=== FINAL SALES REPORT ===\n";
+    double totalSales = 0;
+    for (int i = 0; i < NUM_PRODUCTS; i++) {
+       
+        
+        double productTotal = sales[i] * prices[i];
+        totalSales += productTotal;
+        cout << left << setw(COL2_WIDTH) << products[i]
+             << "Sold: " << sales[i]
+             << "  Revenue: $" << productTotal << "\n";
+    }
+    
+    
+    cout << "\nTOTAL REVENUE: $" << fixed << setprecision(2) << totalSales << "\n";
+
+    return 0;
+}

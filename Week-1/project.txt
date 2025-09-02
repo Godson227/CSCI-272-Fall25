@@ -1,0 +1,108 @@
+
+#include <iostream>
+using namespace std;
+#include <string>
+
+int main() {
+    // Initialize empty board
+    char board[3][3] = {
+        {' ', ' ', ' '},
+        {' ', ' ', ' '},
+        {' ', ' ', ' '}
+    };
+
+    // Player symbols
+    const char playerX = 'X';
+    const char playerO = '0';
+    char currentPlayer = playerX;
+
+    // Game variables
+    int r = -1;
+    int c = -1;
+    char winner = ' ';
+
+    // Main game loop
+    for(int i = 0; i < 9; i++) {
+        if (winner != ' ') {
+            break;
+        }
+
+        // Print game board
+        cout << "\n";
+        cout << "     |     |     \n";
+        cout << "  " << board[0][0] << "  |  " << board[0][1] << "  |  " << board[0][2] << "  \n";
+        cout << "_____|_____|_____\n";
+        cout << "     |     |     \n";
+        cout << "  " << board[1][0] << "  |  " << board[1][1] << "  |  " << board[1][2] << "  \n";
+        cout << "_____|_____|_____\n";
+        cout << "     |     |     \n";
+        cout << "  " << board[2][0] << "  |  " << board[2][1] << "  |  " << board[2][2] << "  \n";
+        cout << "     |     |     \n\n";
+
+        // Player input
+        cout << " Current player is " << currentPlayer << endl << endl;
+        while (true) {
+            cout << " Enter row and column to place your mark: ";
+            cin >> r >> c;
+            
+            if(r < 0 || r > 2 || c < 0 || c > 2) {
+                cout << "Invalid input. Try again." << endl;
+            }
+            else if (board[r][c] != ' ') {
+                cout << "Spot already taken. Try again." << endl;
+            }
+            else {
+                break;
+            }
+        }
+
+        // Update board
+        board[r][c] = currentPlayer;
+        currentPlayer = (currentPlayer == playerX) ? playerO : playerX;
+
+        // Check horizontal wins
+        for (int r = 0; r < 3; r++) {
+            if (board[r][0] != ' ' && board[r][0] == board[r][1] && board[r][1] == board[r][2]) {
+                winner = board[r][0];
+                break;
+            }
+        }
+
+        // Check vertical wins
+        for (int c = 0; c < 3; c++) {
+            if (board[0][c] != ' ' && board[0][c] == board[1][c] && board[1][c] == board[2][c]) {
+                winner = board[0][c];
+                break;
+            }
+        }
+
+        // Check diagonal wins
+        if (board[0][0] != ' ' && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
+            winner = board[0][0];
+        }
+        else if (board[0][2] != ' ' && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
+            winner = board[0][2];
+        }
+    }
+
+    // Display final board
+    cout << "\n";
+    cout << "     |     |     \n";
+    cout << "  " << board[0][0] << "  |  " << board[0][1] << "  |  " << board[0][2] << "  \n";
+    cout << "_____|_____|_____\n";
+    cout << "     |     |     \n";
+    cout << "  " << board[1][0] << "  |  " << board[1][1] << "  |  " << board[1][2] << "  \n";
+    cout << "_____|_____|_____\n";
+    cout << "     |     |     \n";
+    cout << "  " << board[2][0] << "  |  " << board[2][1] << "  |  " << board[2][2] << "  \n";
+    cout << "     |     |     \n\n";
+
+    // Display result
+    if (winner != ' ') {
+        cout << "Player " << winner << " wins!" << endl;
+    } else {
+        cout << "It's a draw!" << endl;
+    }
+
+    return 0;
+}
